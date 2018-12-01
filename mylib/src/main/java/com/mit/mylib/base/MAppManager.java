@@ -1,4 +1,4 @@
-package com.mit.mlib.base;
+package com.mit.mylib.base;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

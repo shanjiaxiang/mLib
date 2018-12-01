@@ -1,4 +1,4 @@
-package com.mit.mlib.eventbus;
+package com.mit.mylib.eventbus;
 
 /**
  * Created by shanjiaxiang on 2018\11\30 0030.

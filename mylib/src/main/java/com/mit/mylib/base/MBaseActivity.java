@@ -1,4 +1,4 @@
-package com.mit.mlib.base;
+package com.mit.mylib.base;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.mit.mlib.eventbus.MEvent;
-import com.mit.mlib.util.MPermissionUtil;
+import com.mit.mylib.eventbus.MEvent;
+import com.mit.mylib.util.MPermissionUtil;
 import com.tbruyelle.rxpermissions.Permission;
 
 import org.greenrobot.eventbus.EventBus;
