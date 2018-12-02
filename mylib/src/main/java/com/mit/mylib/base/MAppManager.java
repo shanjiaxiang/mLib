@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -17,14 +18,14 @@ import java.util.Stack;
 public class MAppManager {
 
     private String PageTag = "MAppMananger";
-    private static Stack <Activity> activityStack;
+    private static Stack<Activity> activityStack;
     private static MAppManager instance;
 
     public MAppManager() {
     }
 
     public static MAppManager getInstance() {
-        if (instance != null) {
+        if (instance == null) {
             instance = new MAppManager();
         }
         return instance;
@@ -35,7 +36,7 @@ public class MAppManager {
             activityStack = new Stack <>();
         }
         activityStack.add(activity);
-        MLog.d(this.PageTag, "ActivityStack.onCreate(" + activity.getLocalClassName() + "),size() = "
+        MLog.d(this.PageTag, "ActivityStack.onCreate(" + activity.getLocalClassName() + "), size()="
                 + activityStack.size() + ";");
     }
 

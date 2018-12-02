@@ -10,6 +10,10 @@ public class MEventType {
     public static final String EVENT_REPEAT_LOGIN = "event_repeat_login";
     public static final String EVENT_NET_ERROR = "event_net_error";
     public static final String EVENT_NET_OK = "event_net_ok";
+    public static final String MAIN_THREAD = "MainThread";
+    public static final String BACKGROUND = "BackgroundThread";
+    public static final String POSTING = "PostingThread";
+    public static final String ASYNC = "AsyncThread";
 
     public MEventType() {
     }

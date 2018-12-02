@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.mit.mylib.base.dialog.MSweetDialog;
 import com.mit.mylib.eventbus.MEvent;
 import com.mit.mylib.util.MPermissionUtil;
 import com.tbruyelle.rxpermissions.Permission;
@@ -15,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import rx.functions.Action1;
 
 /**
@@ -25,7 +27,7 @@ public abstract class MBaseActivity extends AppCompatActivity {
 
     public Context mContext = null;
     public Activity mActivity = null;
-    public View mEmptyView = null;
+    public View mEmptyView;
 
     public MBaseActivity() {
     }
@@ -37,31 +39,30 @@ public abstract class MBaseActivity extends AppCompatActivity {
         this.mActivity = this;
         MAppManager.getInstance().addActivity(this);
 
-
     }
 
-    public <T extends View> T myFindViewById(int resId){
+    public <T extends View> T myFindViewById(int resId) {
         return this.findViewById(resId);
     }
 
-    public void requestPermissions(String... permissions){
+    public void requestPermissions(String... permissions) {
         MPermissionUtil.getRxPermission(this)
                 .requestEach(permissions)
-                .subscribe(new Action1 <Permission>() {
+                .subscribe(new Action1<Permission>() {
                     @Override
                     public void call(Permission permission) {
-                        if (permission.granted){
+                        if (permission.granted) {
                             MBaseActivity.this.onPermissionGranted(permission);
-                            MLog.d(this, "同意："+permission.name);
-                        }else {
+                            MLog.d(this, "同意：" + permission.name);
+                        } else {
                             MBaseActivity.this.onPermissionDenied(permission);
-                            MLog.d(this, "拒绝:"+permission.name);
+                            MLog.d(this, "拒绝:" + permission.name);
                         }
                     }
                 });
     }
 
-    public boolean checkPermission(String permission){
+    public boolean checkPermission(String permission) {
         return MPermissionUtil.checkPermission(this, permission);
     }
 
@@ -73,10 +74,28 @@ public abstract class MBaseActivity extends AppCompatActivity {
 
     public abstract void myFindView();
 
-    protected void myInitPresenter(){}
+    protected void myOnClick() {
+    }
 
-    protected void myOnClick(){}
+    protected void showDialog(String msg) {
+        MSweetDialog.showDialog(this, msg);
+    }
 
+    protected void showDialog(String msg, SweetAlertDialog.OnSweetClickListener confirmListener) {
+        MSweetDialog.showDialog(this, msg, confirmListener, (SweetAlertDialog.OnSweetClickListener) null);
+    }
+
+    protected void showNetErrorDialog() {
+        MSweetDialog.showNetErrorDialog(this, (SweetAlertDialog.OnSweetClickListener) null);
+    }
+
+    protected void showNetErrorDialog(SweetAlertDialog.OnSweetClickListener confirmListener) {
+        MSweetDialog.showNetErrorDialog(this, confirmListener);
+    }
+
+    protected void dismissDialog() {
+        MSweetDialog.dismissDialog();
+    }
 
     @Override
     protected void onStart() {
