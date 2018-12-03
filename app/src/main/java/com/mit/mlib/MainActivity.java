@@ -1,8 +1,12 @@
 package com.mit.mlib;
 
 import android.Manifest;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -12,8 +16,12 @@ import com.mit.mylib.base.MLog;
 import com.mit.mylib.base.dialog.MSweetDialog;
 import com.mit.mylib.eventbus.MEvent;
 import com.mit.mylib.eventbus.MEventType;
+import com.mit.mylib.util.MAppMetaData;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
+import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -35,7 +43,30 @@ public class MainActivity extends MBaseActivity implements View.OnClickListener 
         MLog.enableLogging();
         MLog.d("Logging is enable>>>>>>>>>>>>>>>>>>>>>");
 
+        PackageManager packageManager = this.getPackageManager();
+        String resultData = null;
+        if (packageManager != null) {
+            ApplicationInfo applicationInfo = null;
+            try {
+                applicationInfo = packageManager.getApplicationInfo(this.getPackageName(), PackageManager.GET_META_DATA);
+                MLog.d("get applicationInfo");
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (applicationInfo != null && applicationInfo.metaData != null) {
+                Set <String> set = applicationInfo.metaData.keySet();
+                for (String key : set) {
+                    MLog.d(key);
+                    resultData = (String) applicationInfo.metaData.get(key);
+                    MLog.d(resultData);
+                }
+
+            } else
+                MLog.d("application == null");
+        }
+
         myFindView();
+
         myOnClick();
     }
 
@@ -59,76 +90,17 @@ public class MainActivity extends MBaseActivity implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_1:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MLog.d("bt1" + Thread.currentThread().getName() + ":" + Thread.currentThread().getId());
-                        EventBus.getDefault().post(new MEvent(MEventType.MAIN_THREAD, "子线程发送"));
-                    }
-                }, "子线程1").start();
                 break;
             case R.id.bt_2:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MLog.d("bt2" + Thread.currentThread().getName() + ":" + Thread.currentThread().getId());
-                        EventBus.getDefault().post(new MEvent(MEventType.BACKGROUND, "主线程发送"));
-                    }
-                }, "子线程2").start();
 
 
                 break;
             case R.id.bt_3:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MLog.d("bt3" + Thread.currentThread().getName() + ":" + Thread.currentThread().getId());
-                        EventBus.getDefault().post(new MEvent(MEventType.POSTING, "子线程发送"));
-                    }
-                }, "子线程2").start();
-
 
                 break;
             case R.id.bt_4:
-                MLog.d("bt4" + Thread.currentThread().getName() + ":" + Thread.currentThread().getId());
-                EventBus.getDefault().post(new MEvent(MEventType.ASYNC, "主线程发送bt4"));
+
                 break;
-        }
-    }
-
-    @Override
-    public void onMEventMainThread(MEvent event) {
-        super.onMEventMainThread(event);
-        if (event.mEventType.equals(MEventType.MAIN_THREAD)) {
-            MLog.d("After eventbus:" + Thread.currentThread().getName() + ":" + Thread.currentThread().getId());
-        }
-
-    }
-
-    @Override
-    public void onMEventAsyncThread(MEvent event) {
-        super.onMEventAsyncThread(event);
-        if (event.mEventType.equals(MEventType.ASYNC)) {
-//            Toast.makeText(this, (String) event.mEventObject, Toast.LENGTH_SHORT).show();
-            MLog.d("After eventbus:" + Thread.currentThread().getName() + ":" + Thread.currentThread().getId());
-        }
-    }
-
-
-    @Override
-    public void onMEventPostThread(MEvent event) {
-        if (event.mEventType.equals(MEventType.POSTING)) {
-            MLog.d("After eventbus:" + Thread.currentThread().getName() + ":" + Thread.currentThread().getId());
-        }
-
-    }
-
-    @Override
-    public void onMEventBackgroundEvent(MEvent event) {
-        super.onMEventBackgroundEvent(event);
-        if (event.mEventType.equals(MEventType.BACKGROUND)) {
-//            Toast.makeText(this, (String) event.mEventObject, Toast.LENGTH_SHORT).show();
-            MLog.d("After eventbus:" + Thread.currentThread().getName() + ":" + Thread.currentThread().getId());
         }
     }
 }
